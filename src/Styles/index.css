@@ -1,0 +1,214 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+@import "tailwindcss";
+
+/* reset css */
+* {
+  box-sizing: border-box;
+  /* padding: 0; */
+  /* margin: 0; */
+}
+html {
+  scroll-behavior: smooth;
+  font-family: "Inter", "serif" !important;
+}
+section {
+  width: 95%;
+  margin: 0 auto;
+}
+/* form overlay  */
+.form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #00000080;
+  z-index: 10;
+}
+
+/* AG-Grid */
+.ag-theme-quartz .ag-root-wrapper,
+.ag-theme-quartz .ag-header-cell,
+.ag-theme-quartz .ag-cell {
+  font-family: "Inter", sans-serif !important;
+}
+.ag-pinned-left-header .ag-header-cell-resize:after {
+  display: none !important;
+}
+.ag-header-cell-resize {
+  display: none !important;
+}
+/* Remove borders around the entire grid */
+.ag-root-wrapper {
+  border: none !important;
+  box-shadow: none !important; /* Optional: removes shadow if present */
+}
+
+/* Remove borders between rows */
+.ag-row,
+.ag-cell {
+  border: none !important;
+}
+
+/* Remove header borders */
+.ag-header-cell,
+.ag-header {
+  padding: 0;
+  border: none !important;
+  border-bottom: none !important;
+}
+.ag-cell {
+  padding: 0 !important;
+}
+.ag-row {
+  border-bottom: 1px solid #ededed !important;
+  /* z-index: 10 !important; */
+  /* transform: translateY(0);/ */
+}
+
+.ag-theme-quartz .ag-header-cell,
+.ag-theme-quartz .ag-pinned-left-header,
+.ag-theme-quartz .ag-pinned-right-header {
+  border-right: none !important;
+  border-left: none !important;
+}
+.ag-paging-panel {
+  padding: 0;
+  border: none;
+  justify-content: space-between;
+}
+.ag-paging-row-summary-panel {
+  display: none;
+}
+/* Change header background color */
+.ag-header {
+  font-size: 12px !important;
+  padding: 0;
+  background-color: #fff !important; /* Indigo color */
+  color: #9f9f9f !important; /* White text for contrast */
+}
+
+/* sorting number */
+
+/* 
+<span data-ref="eSortOrder" class="ag-sort-indicator-icon ag-sort-order" aria-hidden="true">1</span>
+*/
+
+.ag-sort-order {
+  display: none !important;
+}
+
+/* Grid data pagination */
+@media (max-width: 465px) {
+  .ag-paging-panel {
+    margin: 50px 0 !important;
+    margin-top: 10px !important;
+    height: 100;
+    display: inline-block;
+    align-items: center !important;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .ag-input-wrapper,
+  .ag-picker-field-wrapper {
+    flex: 0;
+    margin: 10px 0 !important;
+  }
+}
+/* calendar gird */
+.fc .fc-daygrid-day-top {
+  display: inline-block;
+}
+.fc .fc-daygrid-day-events {
+  margin: 0;
+}
+.fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events {
+  min-height: 0.5em;
+}
+.fc-today-button {
+  display: none !important;
+}
+.fc .fc-toolbar-title {
+  font-size: 1.2em;
+  margin: 0px;
+}
+.fc-scrollgrid-sync-table {
+  height: 150px !important;
+}
+
+.fc-scrollgrid-sync-inner {
+  text-align: center;
+}
+.fc-button-group .fc-prev-button {
+  background-color: #b0b0b0;
+  border: none;
+}
+.fc-button-group .fc-next-button {
+  background-color: #b0b0b0;
+  border: none;
+}
+/* Active Link styles */
+.nav-link.active {
+  font-weight: bold;
+  color: white;
+}
+
+/* Underline effect */
+.nav-link.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background-color: white;
+}
+
+/* Developer wise profile section */
+@media (max-width: 2560px) {
+  .dev-profile-section img {
+    margin-left: 22px;
+  }
+}
+@media (max-width: 1440px) {
+  .dev-profile-section img {
+    margin-left: 20px;
+  }
+}
+@media (max-width: 1024px) {
+  .dev-profile-section {
+    width: 100px;
+  }
+  .dev-profile-section img {
+    margin-left: 0px;
+  }
+  .dev-menu {
+    display: flex;
+    flex-direction: column;
+  }
+}
+@media (max-width: 768px) {
+  .dev-profile-section {
+    width: 180px;
+  }
+  .dev-profile-section img {
+    margin-left: 32px;
+  }
+  .dev-menu {
+    display: flex;
+    flex-direction: row;
+  }
+}
+@media (max-width: 760px) {
+  .dev-profile-section {
+    width: 80px;
+  }
+  .dev-profile-section img {
+    margin-left: 4px;
+  }
+  .dev-menu {
+    display: flex;
+    flex-direction: column;
+  }
+}
