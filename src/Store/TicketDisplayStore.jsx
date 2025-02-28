@@ -45,7 +45,7 @@ const useTicketDisplayStore = create((set, get) => ({
 
     try {
       // Fixed the endpoint and Axios handling
-      const response = await api.get(`/tickets/${ticketId}/details`);
+      const response = await api.get(`/Ticket/${ticketId}/details`);
 
       // Axios data is already parsed
       const data = response.data;
