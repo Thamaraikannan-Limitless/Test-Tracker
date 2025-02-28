@@ -11,6 +11,7 @@ import AverageTime from "../Ticket/AverageTime";
 import ReassignForm from "../Ticket/ReassignForm";
 import RetestForm from "../Ticket/RetestForm";
 import TicketCloseForm from "../Ticket/TicketCloseForm";
+import personImg from "../../assets/alexander-hipp-iEEBWgY_6lA-unsplash.jpg";
 import {
   getCreatedTabColumns,
   getAssignedTabColumns,
@@ -132,11 +133,11 @@ const TicketTables = ({ tickets, onSelectTicket }) => {
       createdOnFormatted: DateFormatter(ticket.ticketDate || ticket.reportedOn),
       createdBy: {
         name: ticket.reportedByName,
-        image: "/default-avatar.png",
+        image: personImg,
       },
       reportedBy: {
         name: ticket.reportedByName,
-        image: "/default-avatar.png",
+        image: personImg,
       },
 
       // Assigned tab fields
@@ -144,12 +145,12 @@ const TicketTables = ({ tickets, onSelectTicket }) => {
       assignedOnFormatted: DateFormatter(ticket.assignedDate),
       assignedBy: {
         name: ticket.assignedToName,
-        image: "/default-avatar.png",
+        image: personImg,
       },
       assignedTo: {
         name: ticket.assignedToName,
         id: ticket.assignedToId,
-        image: "/default-avatar.png",
+        image: personImg,
       },
       averageTime:
         ticket.averageWorkingHours > 0 || ticket.averageWorkingMinutes > 0
@@ -164,12 +165,12 @@ const TicketTables = ({ tickets, onSelectTicket }) => {
       completedBy: {
         name: ticket.completedByName,
         id: ticket.completedById,
-        image: "/default-avatar.png",
+        image: personImg,
       },
       retestTo: {
         name: ticket.reTestByName,
         id: ticket.reTestById,
-        image: "/default-avatar.png",
+        image: personImg,
       },
       timeToFinish:
         ticket.averageWorkingHours > 0 || ticket.averageWorkingMinutes > 0
