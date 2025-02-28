@@ -48,7 +48,7 @@ const useTicketDisplayStore = create((set, get) => ({
       const response = await api.get(`/Ticket/${ticketId}/details`);
 
       // Axios data is already parsed
-      const data = response.data;
+      const data = response.data.model;
 
       // Update the ticketDetails state with the new ticket
       set((state) => ({
