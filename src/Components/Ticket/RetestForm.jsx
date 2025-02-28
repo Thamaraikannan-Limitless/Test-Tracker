@@ -1,23 +1,22 @@
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import PropType from "prop-types";
-const tester = [
-    {
-        id: 1,
-        name: "tester 1"
-        
-    },
-    {
-        id: 2,
-        name: "tester 2"
-        
-    }
-]
+import useProjectDeveloperStore from "../../Store/DropDownStore";
+
 const RetestForm = ({ onClose }) => {
   const [formData, setFormData] = useState({
     developer: "",
     addremarks: "",
   });
+//data from dropdownStore
+const {
+  testers,
+  fetchTesters
+} = useProjectDeveloperStore();
+//api call
 
+useEffect(() => {
+  fetchTesters();
+}, []);
   const [errors, setErrors] = useState({});
 
   // Handle input changes
@@ -76,7 +75,7 @@ const RetestForm = ({ onClose }) => {
       >
                   <option value="">Select Tester</option>
                   {
-                      tester.map((tester)=> {
+                      testers.map((tester)=> {
                           return (
                               <option key={tester.id}>{tester.name}</option>
                           )
