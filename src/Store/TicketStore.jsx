@@ -124,7 +124,8 @@ const useTicketStore = create((set, get) => ({
         alert(`Warning: Server returned ${response.status} but the operation may not be complete. ${response.data?.message || ''}`);
         return false;
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error("Error submitting ticket:", error);
       console.error("Response data:", error.response?.data);
       console.error("Response status:", error.response?.status);

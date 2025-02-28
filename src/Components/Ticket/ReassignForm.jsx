@@ -1,22 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PropType from "prop-types";
+import useProjectDeveloperStore from "../../Store/DropDownStore";
 
-const dev = [
-  {
-    id: 1,
-    name: "developer 1",
-  },
-  {
-    id: 2,
-    name: "developer 2",
-  },
-];
 
-const ReassignForm = ({ onClose }) => {
+const ReassignForm = ({ ticket, onClose }) => {
   const [formData, setFormData] = useState({
     developer: "",
     addremarks: "",
   });
+  //data from dropdownStore
+  const {
+    developers,
+    fetchDevelopers
+  } = useProjectDeveloperStore();
+  //api call
+
+  useEffect(() => {
+    fetchDevelopers();
+  }, []);
 
   const [errors, setErrors] = useState({});
 
@@ -54,10 +55,10 @@ const ReassignForm = ({ onClose }) => {
       <h2 className="text-2xl font-semibold mb-5">Re-assign to</h2>
       <div className="w-full bg-[#c2c3c3] text-left mb-6 ">
         <h1 className="pt-3 pl-3 text-sm font-[600]">
-          Ticket Number :<span className="font-[400] pl-1">TK00001</span>
+          Ticket Number :<span className="font-[400] pl-1">{ ticket.ticket}</span>
         </h1>
         <h1 className="pt-3 pl-3 pb-3 text-sm font-[600]">
-          Project Name :<span className="font-[400] pl-1">Project 1</span>
+          Project Name :<span className="font-[400] pl-1">{ticket.project}</span>
         </h1>
       </div>
 
@@ -74,7 +75,7 @@ const ReassignForm = ({ onClose }) => {
         }`}
       >
         <option value="">Select Developer</option>
-        {dev.map((dev) => (
+        {developers.map((dev) => (
           <option key={dev.id} value={dev.name}>
             {dev.name}
           </option>
