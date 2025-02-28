@@ -1,5 +1,39 @@
 import PropTypes from "prop-types";
 
+// Helper function to normalize status values - same as in other components
+const normalizeStatus = (status) => {
+  if (!status) return "";
+
+  // Remove spaces and convert to lowercase for consistent comparison
+  const normalized = String(status).toLowerCase().replace(/\s+/g, "");
+
+  // Map all possible variations to standardized form
+  if (
+    (normalized.includes("not") && normalized.includes("done")) ||
+    normalized === "nordone" ||
+    normalized === "notdone"
+  ) {
+    return "NotDone";
+  }
+
+  // Handle "for retest" variations (with or without spaces)
+  if (
+    normalized === "forretest" ||
+    normalized === "retest" ||
+    (normalized.includes("for") && normalized.includes("retest"))
+  ) {
+    return "ForRetest";
+  }
+
+  // Handle other status normalizations
+  if (normalized === "done") return "Done";
+  if (normalized === "created") return "Created";
+  if (normalized === "assigned") return "Assigned";
+
+  // Return original if no match found
+  return status;
+};
+
 const ChangeStatusRenderer = (props) => {
   const statuses = {
     ForRetest: {
@@ -10,10 +44,16 @@ const ChangeStatusRenderer = (props) => {
       color: "bg-[#00C875] text-white",
       icon: "",
     },
+    NotDone: {
+      color: "bg-[#6141AC] text-white",
+      icon: "",
+    },
   };
 
-  const normalizedValue =
-    props.value === "ForReTest" ? "ForRetest" : props.value;
+  // First normalize the value to handle variations
+  const normalizedValue = normalizeStatus(props.value);
+
+  // Get the status configuration based on the normalized value
   const status = statuses[normalizedValue];
 
   return (

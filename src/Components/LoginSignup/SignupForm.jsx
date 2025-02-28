@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import useSignupAuthStore from "../../Store/useSignupAuthStore";
-import PropType from "prop-types";
 import { IoWarningOutline } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
-const SignupForm = ({ setIsLogin }) => {
+const SignupForm = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -101,6 +102,11 @@ const SignupForm = ({ setIsLogin }) => {
       resetState();
     }
   }, [name, email, password, confirmPassword, resetState]);
+
+  const handleLoginClick = () => {
+    resetState(); // Clear errors when switching to login
+    navigate("/login");
+  };
 
   return (
     <div>
@@ -210,21 +216,14 @@ const SignupForm = ({ setIsLogin }) => {
       <p className="mt-4 text-[#a9a9a9] text-sm">
         Already have an account?
         <button
-          onClick={() => {
-            resetState(); // Clear errors when switching to login
-            setIsLogin(true);
-          }}
-          className="text-[#71BF44] underline font-bold cursor-pointer"
+          onClick={handleLoginClick}
+          className="text-[#71BF44] ml-2 font-bold cursor-pointer"
         >
           Login
         </button>
       </p>
     </div>
   );
-};
-
-SignupForm.propTypes = {
-  setIsLogin: PropType.func.isRequired,
 };
 
 export default SignupForm;

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
@@ -22,13 +22,48 @@ import DateFormatter from "./Utils/DateFormatter";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-const TicketTables = ({ tickets, onSelectTicket }) => {
-  const location = useLocation();
+// Helper function to normalize status values
+const normalizeStatus = (status) => {
+  if (!status) return "";
+
+  // Remove spaces and convert to lowercase for consistent comparison
+  const normalized = String(status).toLowerCase().replace(/\s+/g, "");
+
+  // Map all possible variations to standardized form
+  if (
+    (normalized.includes("not") && normalized.includes("done")) ||
+    normalized === "nordone" ||
+    normalized === "notdone"
+  ) {
+    return "NotDone"; // Standardized form
+  }
+
+  // Handle "for retest" variations (with or without spaces)
+  if (
+    normalized === "forretest" ||
+    normalized === "retest" ||
+    (normalized.includes("for") && normalized.includes("retest"))
+  ) {
+    return "ForRetest";
+  }
+
+  // Handle other status normalizations
+  if (normalized === "done") return "Done";
+  if (normalized === "created") return "Created";
+  if (normalized === "assigned") return "Assigned";
+
+  // If no match found, return the original (this helps with debugging)
+  return status;
+};
+
+const TicketTables = ({
+  tickets,
+  onSelectTicket,
+  initialActiveTab = "All",
+}) => {
+  const navigate = useNavigate();
   const [paginationPageSize, setPaginationPageSize] = useState(10);
-  // Initialize activeTab from location state if available, otherwise use "All"
-  const [activeTab, setActiveTab] = useState(
-    location.state?.activeTab || "All"
-  );
+  const [activeTab, setActiveTab] = useState(initialActiveTab);
   const [searchQuery, setSearchQuery] = useState("");
   const [hiddenColumns, setHiddenColumns] = useState([]);
   const [appliedFilters, setAppliedFilters] = useState({});
@@ -41,12 +76,34 @@ const TicketTables = ({ tickets, onSelectTicket }) => {
   const [selectedTicket, setSelectedTicket] = useState(null);
   const gridRef = useRef(null);
 
-  // Clear the location state after using it
-  useEffect(() => {
-    if (location.state?.activeTab) {
-      window.history.replaceState({}, document.title);
-    }
-  }, [location.state]);
+  // Handle tab changes with routing
+  const handleTabChange = useCallback(
+    (newTab) => {
+      setActiveTab(newTab);
+
+      // Update the URL based on the selected tab
+      switch (newTab) {
+        case "All":
+          navigate("/ticket");
+          break;
+        case "Created":
+          navigate("/ticket/created");
+          break;
+        case "Assigned":
+          navigate("/ticket/assigned");
+          break;
+        case "Completed":
+        case "ForReTest":
+        case "Done":
+        case "NotDone":
+          navigate("/ticket/completed");
+          break;
+        default:
+          navigate("/ticket");
+      }
+    },
+    [navigate]
+  );
 
   // Use useCallback to memoize handler functions for better performance
   const handleTicketSelect = useCallback(
@@ -126,7 +183,7 @@ const TicketTables = ({ tickets, onSelectTicket }) => {
       priority: ticket.priority,
       project: ticket.projectName,
       projectId: ticket.projectId,
-      status: ticket.status,
+      status: normalizeStatus(ticket.status), // Normalize status here
 
       // Created tab fields
       createdOn: ticket.ticketDate || ticket.reportedOn,
@@ -180,7 +237,7 @@ const TicketTables = ({ tickets, onSelectTicket }) => {
           : "-",
 
       // For "Change Status" column
-      changeStatus: ticket.status,
+      changeStatus: ticket.status, // Keep original for reference
 
       //  API fields (kept for reference and data manipulation)
       bugDescription: ticket.bugDescription,
@@ -191,7 +248,7 @@ const TicketTables = ({ tickets, onSelectTicket }) => {
 
     let filteredTickets = [...formattedTickets];
 
-    // Filter by tab
+    // Filter by tab with standardized status values
     if (activeTab === "Created") {
       filteredTickets = formattedTickets.filter(
         (ticket) => ticket.status === "Created"
@@ -202,7 +259,10 @@ const TicketTables = ({ tickets, onSelectTicket }) => {
       );
     } else if (activeTab === "Completed") {
       filteredTickets = formattedTickets.filter(
-        (ticket) => ticket.status === "Done" || ticket.status === "ForRetest"
+        (ticket) =>
+          ticket.status === "Done" ||
+          ticket.status === "ForRetest" ||
+          ticket.status === "NotDone"
       );
     } else if (activeTab !== "All") {
       filteredTickets = formattedTickets.filter(
@@ -214,9 +274,9 @@ const TicketTables = ({ tickets, onSelectTicket }) => {
     setHiddenColumns([]);
   }, [activeTab, tickets]);
 
-  // FIXED FILTER LOGIC - This is the key part that has been updated
+  // Filter logic for search and filters
   const filteredData = gridData.filter((ticket) => {
-    // Search query filter remains the same
+    // Search query filter
     const matchesSearch =
       searchQuery === "" ||
       ticket.ticket?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -281,7 +341,11 @@ const TicketTables = ({ tickets, onSelectTicket }) => {
                   String(ticket.completedBy.id) === value))
             );
 
-          // Default case: direct property match (priority, status, etc.)
+          case "status":
+            // Apply status normalization for filters too
+            return normalizeStatus(ticket.status) === normalizeStatus(value);
+
+          // Default case: direct property match (priority, etc.)
           default:
             if (ticket[key] === undefined) return false;
 
@@ -318,8 +382,9 @@ const TicketTables = ({ tickets, onSelectTicket }) => {
           openRetestForm
         );
       case "Completed":
-      case "ForRetest":
+      case "ForReTest":
       case "Done":
+      case "NotDone": // Added to support the new status
         return getCompletedTabColumns(handleTicketSelect, openCloseForm);
       default:
         return getDefaultColumns(
@@ -349,8 +414,8 @@ const TicketTables = ({ tickets, onSelectTicket }) => {
 
   const defaultColDef = {
     resizable: true,
-    filter: false, // As per your original component
-    sortable: false, // Default, individual columns override this
+    filter: false,
+    sortable: false,
     cellStyle: { border: "none" },
   };
 
@@ -372,7 +437,7 @@ const TicketTables = ({ tickets, onSelectTicket }) => {
 
   return (
     <div className="">
-      <TableHeader activeTab={activeTab} setActiveTab={setActiveTab} />
+      <TableHeader activeTab={activeTab} setActiveTab={handleTabChange} />
 
       <TableFilters
         searchQuery={searchQuery}
@@ -492,6 +557,7 @@ const TicketTables = ({ tickets, onSelectTicket }) => {
 TicketTables.propTypes = {
   tickets: PropTypes.array.isRequired,
   onSelectTicket: PropTypes.func.isRequired,
+  initialActiveTab: PropTypes.string,
 };
 
 export default TicketTables;

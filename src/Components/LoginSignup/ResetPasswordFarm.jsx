@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { IoMail } from "react-icons/io5";
-import PropType from "prop-types"
-const ResetPasswordForm = ({ setResetPassword }) => {
+import { useNavigate } from "react-router-dom";
+
+const ResetPasswordForm = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [success, setSuccess] = useState(false);
 
@@ -9,9 +11,13 @@ const ResetPasswordForm = ({ setResetPassword }) => {
     e.preventDefault();
     setSuccess(true);
     setTimeout(() => {
-      setResetPassword(false);
+      navigate("/login");
       setSuccess(false);
     }, 3000);
+  };
+
+  const handleBackToLogin = () => {
+    navigate("/login");
   };
 
   return (
@@ -29,8 +35,6 @@ const ResetPasswordForm = ({ setResetPassword }) => {
       <form onSubmit={handleReset} className="space-y-7">
         <div className="flex items-center border border-white p-3 rounded-lg">
           <IoMail className="text-gray-400 mx-2 text-2xl" />
-          {/* <FaRegEnvelope />
-          <MdEmail /> */}
           <input
             type="email"
             placeholder="Enter your email"
@@ -51,18 +55,14 @@ const ResetPasswordForm = ({ setResetPassword }) => {
       {/* Back to Login Link */}
       <p className="mt-4 text-[#71BF44] text-sm">
         <button
-          onClick={() => setResetPassword(false)}
-          className="text-[#71BF44] underline cursor-pointer"
+          onClick={handleBackToLogin}
+          className="text-[#71BF44] font-bold cursor-pointer"
         >
           Back to Login
         </button>
       </p>
     </>
   );
-};
-
-ResetPasswordForm.propTypes = {
-  setResetPassword: PropType.func.isRequired,
 };
 
 export default ResetPasswordForm;
