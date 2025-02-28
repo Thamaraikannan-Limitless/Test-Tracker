@@ -18,13 +18,12 @@ const useTicketDisplayStore = create((set, get) => ({
       // Using your Axios instance correctly - no need for response.json() with Axios
       const response = await api.post("/Ticket/details/list", {
         pageNumber: 1,
-        pageSize: 50,
+        pageSize: 5000,
       });
 
       // Axios already parses JSON - data is in response.data
       const data = response.data.model;
       console.log(data);
-
       set({ tickets: data, loading: false });
     } catch (err) {
       set({

@@ -2,10 +2,11 @@ import { useState } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import useLoginAuthStore from "../../Store/useLoginAuthStore";
-import PropType from "prop-types";
+import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { IoWarningOutline } from "react-icons/io5";
-const LoginForm = ({ setResetPassword, setIsLogin }) => {
+
+const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -20,6 +21,14 @@ const LoginForm = ({ setResetPassword, setIsLogin }) => {
     if (success) {
       navigate("/dashboard");
     }
+  };
+
+  const handleResetClick = () => {
+    navigate("/reset-password");
+  };
+
+  const handleRegisterClick = () => {
+    navigate("/signup");
   };
 
   return (
@@ -79,28 +88,24 @@ const LoginForm = ({ setResetPassword, setIsLogin }) => {
       <p className="mt-4 text-[#D1D2D4] text-sm">
         Forgot password?
         <button
-          onClick={() => setResetPassword(true)}
-          className="text-[#71BF44] underline font-bold cursor-pointer"
+          onClick={handleResetClick}
+          className="text-[#71BF44]  font-bold cursor-pointer ml-2"
         >
           Reset
         </button>
       </p>
 
       <p className="mt-2 text-[#D1D2D4] text-sm">
-        Don’t have an account?
+        Don't have an account?
         <button
-          onClick={() => setIsLogin(false)}
-          className="text-[#71BF44] underline font-bold ml-2 cursor-pointer"
+          onClick={handleRegisterClick}
+          className="text-[#71BF44]  font-bold ml-2 cursor-pointer"
         >
           Register
         </button>
       </p>
     </>
   );
-};
-LoginForm.propTypes = {
-  setResetPassword: PropType.func.isRequired,
-  setIsLogin: PropType.func.isRequired,
 };
 
 export default LoginForm;

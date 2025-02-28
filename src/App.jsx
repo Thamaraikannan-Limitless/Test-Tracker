@@ -7,9 +7,15 @@ import {
 } from "react-router-dom";
 import { useEffect } from "react";
 import useLoginAuthStore from "./Store/useLoginAuthStore";
-import AuthForm from "./Pages/AuthForm";
+import LoginPage from "./Pages/Authentication/LoginPage";
+import SignupPage from "./Pages/Authentication/SignupPage";
+import ResetPasswordPage from "./Pages/Authentication/ResetPasswordPage";
 import Dashboard from "./Pages/Dashboard";
-import Tickets from "./Pages/Tickets";
+import Tickets from "./Pages/Tickets/Tickets";
+import TicketsAllPage from "./Pages/Tickets/TicketsAllPage";
+import TicketsCreatedPage from "./Pages/Tickets/TicketsCreatedPage";
+import TicketsAssignedPage from "./Pages/Tickets/TicketsAssignedPage";
+import TicketsCompletedPage from "./Pages/Tickets/TicketsCompletedPage";
 import TicketDetailWrapper from "./Components/Ticket/TicketDetailWrapper";
 import Header from "./Components/Header/Header";
 import ProtectedRoute from "./Routes/ProtectedRoute";
@@ -30,25 +36,33 @@ function App() {
     checkAuth(); // Ensure authentication state is loaded on startup
   }, []);
 
-  // if (isLoading) {
-  //   return (
-  //     <div className="flex justify-center items-center h-screen">
-  //       Loading...
-  //     </div>
-  //   ); // Optional loading state
-  // }
-
   return (
     <Router>
       <Routes>
-        {/* Public Route (Login) */}
-        <Route path="/" element={<AuthForm />} />
+        {/* Public Routes (Authentication) */}
+        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
 
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
           <Route element={<Layout />}>
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/ticket" element={<Tickets />} />
+
+            {/* Legacy Tickets route - redirects to /ticket */}
+            <Route path="/tickets" element={<Tickets />} />
+
+            {/* New Ticket Routes */}
+            <Route path="/ticket" element={<TicketsAllPage />} />
+            <Route path="/ticket/created" element={<TicketsCreatedPage />} />
+            <Route path="/ticket/assigned" element={<TicketsAssignedPage />} />
+            <Route
+              path="/ticket/completed"
+              element={<TicketsCompletedPage />}
+            />
+
+            {/* Ticket detail route */}
             <Route
               path="/tickets/:ticketId"
               element={<TicketDetailWrapper />}
@@ -57,9 +71,10 @@ function App() {
         </Route>
 
         {/* Redirect invalid routes */}
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
   );
 }
+
 export default App;
