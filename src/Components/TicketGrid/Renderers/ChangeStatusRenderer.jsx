@@ -10,7 +10,7 @@ const normalizeStatus = (status) => {
   // Map all possible variations to standardized form
   if (
     (normalized.includes("not") && normalized.includes("done")) ||
-    normalized === "nordone" ||
+    normalized === "notdone" ||
     normalized === "notdone"
   ) {
     return "NotDone";

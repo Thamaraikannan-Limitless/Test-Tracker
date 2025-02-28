@@ -23,7 +23,7 @@ const EditTimeRenderer = (props) => {
       <span className="mr-2">{props.value}</span>
       <button
         onClick={props.onClick}
-        className="text-gray-500 hover:text-gray-700 cursor-pointer ms-2 text-[#9F9F9F] text-lg"
+        className=" hover:text-gray-700 cursor-pointer ms-2 text-[#9F9F9F] text-lg"
       >
         <MdOutlineModeEdit />
       </button>
