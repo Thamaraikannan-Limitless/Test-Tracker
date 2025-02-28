@@ -1,9 +1,12 @@
-
 import { NavLink } from "react-router-dom";
-import { MdOutlineClose } from "react-icons/md";
+import { MdOutlineClose, MdOutlineLogout } from "react-icons/md";
 import Profile from "./Profile";
 import PropType from "prop-types";
+import useLoginAuthStore from "../../Store/useLoginAuthStore";
+
 const MobileMenu = ({ toggleMenu }) => {
+  const { logout } = useLoginAuthStore();
+
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-[#034C41] z-50">
       {/* Close Icon */}
@@ -17,9 +20,9 @@ const MobileMenu = ({ toggleMenu }) => {
       </div>
 
       {/* Mobile & Tablet Menu Links */}
-      <div className="flex flex-col items-center gap-y-8 text-white">
-        <Profile />
-        <nav className="flex flex-col items-center gap-y-8">
+      <div className="flex flex-col items-start gap-y-8 ml-6 text-white">
+        <Profile isMobileMenuOpen={true} /> {/* Pass prop to Profile */}
+        <nav className="flex flex-col item-start ml-6 gap-y-8">
           <NavLink
             to="/dashboard"
             onClick={toggleMenu}
@@ -42,6 +45,14 @@ const MobileMenu = ({ toggleMenu }) => {
           >
             Tickets
           </NavLink>
+
+          {/* Show Logout when Mobile Menu is open */}
+          <button
+            onClick={() => logout()}
+            className="mt-4 text-red-400 flex items-center gap-2 text-lg"
+          >
+            <MdOutlineLogout className="w-5 h-5" /> Logout
+          </button>
         </nav>
       </div>
     </div>
@@ -49,7 +60,7 @@ const MobileMenu = ({ toggleMenu }) => {
 };
 
 MobileMenu.propTypes = {
-    toggleMenu: PropType.func.isRequired,
-  };
+  toggleMenu: PropType.func.isRequired,
+};
 
 export default MobileMenu;
