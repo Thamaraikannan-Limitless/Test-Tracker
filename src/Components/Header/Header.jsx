@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import MobileMenu from "./MobileMenu";
 import { IoMenu } from "react-icons/io5";
 
@@ -15,11 +15,13 @@ const Header = () => {
       <section className=" flex justify-between items-center py-2 text-base">
         {/* Logo */}
         <div>
-          <img
-            src={logo}
-            alt="limitless-logo"
-            className="h-[40px] md:h-[56px]"
-          />
+          <Link to={"/dashboard"}>
+            <img
+              src={logo}
+              alt="limitless-logo"
+              className="h-[40px] md:h-[56px]"
+            />
+          </Link>
         </div>
 
         {/* Hamburger Icon for Tablet and Mobile */}
